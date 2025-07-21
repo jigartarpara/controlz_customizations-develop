@@ -21,7 +21,10 @@ def make_clickpost_doc_from_sales_order_to_customer(source_name,target_doc=None)
         target.pickup_phone = customer.cu_mobile_number
         target.pickup_name = so.customer_name
         target.pickup_time= now()
-        target.pickup_district= get_district_from_pincode_and_address(so.customer_address)
+        try:
+            target.pickup_district= get_district_from_pincode_and_address(so.customer_address)
+        except:
+            pass
         target.invoice_number=so.name
         target.reference_number=so.name
         target.order_type=so.custom_order_payment_type
