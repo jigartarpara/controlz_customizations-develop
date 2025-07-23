@@ -17,15 +17,15 @@ def execute(filters=None):
 	return columns, data
 
 def get_data(filters):
-	filters = {
-		"docstatus": 1,
-		"stock_entry_type": "Manufacture",
-	}
+	app_filters = [
+		["docstatus","=",  1],
+		["stock_entry_type","=", "Manufacture"],
+	]
 	if filters.get("from_date"):
-		filters["posting_date"] = [">=", filters["from_date"]]
+		app_filters.append(["posting_date", ">=", filters["from_date"]])
 	if filters.get("to_date"):
-		filters["posting_date"] = ["<=", filters["to_date"]]
-	data = frappe.get_all("Stock Entry",filters)
+		app_filters.append(["posting_date","<=", filters["to_date"]])
+	data = frappe.get_all("Stock Entry",app_filters)
 	final_output = []
 	for row in data:
 		stock_entry = frappe.get_doc("Stock Entry", row["name"])
