@@ -6,12 +6,16 @@ frappe.query_reports["Manufacturing Cost Report"] = {
 		{
 			"fieldname": "from_date",
 			"label": "From",
-			"fieldtype": "Date"
+			"fieldtype": "Date",
+			"requeired": 1,
+			"default": frappe.datetime.add_months(frappe.datetime.get_today(), -1)
 		},
 		{
 			"fieldname": "to_date",
 			"label": "To",
-			"fieldtype": "Date"
+			"fieldtype": "Date",
+			"requeired": 1,
+			"default": frappe.datetime.get_today()
 		}
 	]
 };
