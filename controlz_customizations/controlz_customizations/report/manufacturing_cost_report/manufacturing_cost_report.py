@@ -69,11 +69,11 @@ def get_data(filters):
 			"serial_no": serial_no,
 			"indent":0
 		})
-		for row in raw_data:
+		for temp2 in raw_data:
 			final_output.append({
-				"fg_item": row.get("r_itemcode"),
-				"serial_no": row.get("r_serial_no"),
-				"fg_value": row.get("r_value"),
+				"fg_item": temp2.get("r_itemcode"),
+				"serial_no": temp2.get("r_serial_no"),
+				"fg_value": temp2.get("r_value"),
 				"indent": 1
 			})
 
