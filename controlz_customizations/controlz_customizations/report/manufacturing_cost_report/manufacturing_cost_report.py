@@ -8,8 +8,10 @@ def execute(filters=None):
 	columns = [
         {"label": "Stock Entry", "fieldname": "stock_entry", "fieldtype": "Link", "options": "Stock Entry", "width": 300},
         {"label": "Posting Date", "fieldname": "posting_date", "fieldtype": "Date", "width": 350},
-		{"label": "Serial No", "fieldname": "serial_no", "fieldtype": "Link", "options": "Serial No","width": 180},
-        {"label": "FG Item", "fieldname": "fg_item", "fieldtype": "Link", "options": "Item", "width": 300},
+		{"label": "FG Serial No", "fieldname": "fg_serial_no", "fieldtype": "Link", "options": "Serial No","width": 180},
+		{"label": "FG Item", "fieldname": "fg_item", "fieldtype": "Link", "options": "Item", "width": 300},
+		{"label": "Part Serial No", "fieldname": "serial_no", "fieldtype": "Link", "options": "Serial No","width": 180},
+        {"label": "Part Item", "fieldname": "part_item", "fieldtype": "Link", "options": "Item", "width": 300},
         {"label": "Cost", "fieldname": "fg_value", "fieldtype": "Float", "width": 180},
         {"label": "Part Value", "fieldname": "part_value", "fieldtype": "Float", "width": 180},
         {"label": "Scrap Value", "fieldname": "scrap_value", "fieldtype": "Float", "width": 300},
@@ -66,12 +68,12 @@ def get_data(filters):
 			"fg_value": fg_value,
 			"part_value": part_value,
 			"scrap_value": scrap_value,
-			"serial_no": serial_no,
+			"fg_serial_no": serial_no,
 			"indent":0
 		})
 		for temp2 in raw_data:
 			final_output.append({
-				"fg_item": temp2.get("r_itemcode"),
+				"part_item": temp2.get("r_itemcode"),
 				"serial_no": temp2.get("r_serial_no"),
 				"fg_value": temp2.get("r_value"),
 				"indent": 1
