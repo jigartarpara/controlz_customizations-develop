@@ -10,7 +10,7 @@ def execute(filters=None):
         {"label": "Item To Manufacture", "fieldname": "production_item", "fieldtype": "Link", "options": "Item", "width": 300},
         {"label": "Workstation", "fieldname": "workstation", "fieldtype": "Data", "width": 180},
         {"label": "Arrival Time", "fieldname": "arrival_time", "fieldtype": "Datetime", "width": 180},
-        {"label": "Serial No", "fieldname": "serial_no", "fieldtype": "Float", "width": 300},
+        {"label": "Serial No", "fieldname": "serial_no", "fieldtype": "Data", "width": 300},
         
     ]
 	data = get_data(filters)
