@@ -11,6 +11,7 @@ def execute(filters=None):
         {"label": "Workstation", "fieldname": "workstation", "fieldtype": "Data", "width": 180},
         {"label": "Arrival Time", "fieldname": "arrival_time", "fieldtype": "Datetime", "width": 180},
         {"label": "Serial No", "fieldname": "serial_no", "fieldtype": "Data", "width": 300},
+        {"label": "idx", "fieldname": "idx", "fieldtype": "Data", "width": 300},
         
     ]
 	data = get_data(filters)
@@ -23,7 +24,8 @@ def get_data(filters):
 			wo.production_item as production_item,
 			wim.workstation as workstation,
 			CASE WHEN MIN(wim.idx)  THEN wim.arrival_time ELSE '' END AS arrival_time,
-			CASE WHEN MIN(wim.idx)  THEN wim.serial_no ELSE '' END AS serial_no
+			CASE WHEN MIN(wim.idx)  THEN wim.serial_no ELSE '' END AS serial_no,
+			MIN(wim.idx) as idx
 		from 
 			`tabWork Order` wo,
 			`tabWorkstation Item Movement` wim
