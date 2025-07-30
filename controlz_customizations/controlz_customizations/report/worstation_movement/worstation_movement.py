@@ -29,7 +29,8 @@ def get_data(filters):
 			`tabWorkstation Item Movement` wim
 						
 		where 
-			wo.docstatus = 1
+			wo.name = wim.parent
+		and wo.docstatus = 1
 		and wo.creation >= %(from_date)s
 		and wo.creation <= %(to_date)s
 		group by wo.name,wim.workstation
