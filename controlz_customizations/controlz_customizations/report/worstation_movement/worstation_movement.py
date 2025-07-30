@@ -9,7 +9,7 @@ def execute(filters=None):
         {"label": "Work Oder", "fieldname": "workorder", "fieldtype": "Link", "options": "Work Order", "width": 300},
         {"label": "Item To Manufacture", "fieldname": "production_item", "fieldtype": "Link", "options": "Item", "width": 300},
         {"label": "Workstation", "fieldname": "workstation", "fieldtype": "Data", "width": 180},
-        {"label": "Arrival Time", "fieldname": "arrival_time", "fieldtype": "Float", "width": 180},
+        {"label": "Arrival Time", "fieldname": "arrival_time", "fieldtype": "Datetime", "width": 180},
         {"label": "Serial No", "fieldname": "serial_no", "fieldtype": "Float", "width": 300},
         
     ]
