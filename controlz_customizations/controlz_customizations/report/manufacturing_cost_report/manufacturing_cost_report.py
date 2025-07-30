@@ -73,7 +73,7 @@ def get_data(filters):
 			final_output.append({
 				"fg_item": row.get("r_itemcode"),
 				"serial_no": row.get("r_serial_no"),
-				"part_value": row.get("r_value"),
+				"fg_value": row.get("r_value"),
 				"indent": 1
 			})
 
