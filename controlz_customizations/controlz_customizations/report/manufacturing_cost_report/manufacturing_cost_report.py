@@ -36,9 +36,15 @@ def get_data(filters):
 		fg_value = 0.0
 		scrap_value = 0.0
 		serial_no = ""
+		raw_data = []
 		for item in stock_entry.items:
 			if item.idx == 1:
 				serial_no = item.serial_no
+				raw_data.append({
+					"r_itemcode": item.item_code,
+					"r_serial_no": item.serial_no,
+					"r_value": get_purchase_value(item.item_code, item.serial_no) ,
+				})
 			elif item.is_finished_item:
 				fg_item = item.item_code
 				fg_value = item.basic_rate
@@ -46,6 +52,11 @@ def get_data(filters):
 				scrap_value = item.basic_rate
 			else:
 				part_value += item.basic_rate
+				raw_data.append({
+					"r_itemcode": item.item_code,
+					"r_serial_no": item.serial_no,
+					"r_value": 0,
+				})
 
 
 		final_output.append({
@@ -55,7 +66,30 @@ def get_data(filters):
 			"fg_value": fg_value,
 			"part_value": part_value,
 			"scrap_value": scrap_value,
-			"serial_no": serial_no
+			"serial_no": serial_no,
+			"indent":0
 		})
+		for row in raw_data:
+			final_output.append({
+				"fg_item": row.get("r_itemcode"),
+				"serial_no": row.get("r_serial_no"),
+				"part_value": row.get("r_value"),
+				"indent": 1
+			})
 
 	return final_output
+
+def get_purchase_value(item_code, serial_no):
+	valuation_rate = frappe.db.sql(''' 
+	select 
+		purchase_recept_item.rate 
+	from 
+		`tabPurchase Receipt Item` as purchase_recept_item
+	where
+		purchase_recept_item.item_code = %(item_code)s
+		and purchase_recept_item.serial_no = %(serial_no)s
+            ''',{ "serial_no":serial_no, "item_code": item_code })
+	if valuation_rate and valuation_rate[0]:
+		valuation_rate = valuation_rate[0][0]
+	else:
+		valuation_rate = 0
