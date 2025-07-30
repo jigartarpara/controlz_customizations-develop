@@ -23,8 +23,8 @@ def get_data(filters):
 			wo.name as workorder,
 			wo.production_item as production_item,
 			wim.workstation as workstation,
-			CASE WHEN MIN(wim.idx) = wim.idx  THEN wim.arrival_time ELSE '' END AS arrival_time,
-			CASE WHEN MIN(wim.idx) = wim.idx THEN wim.serial_no ELSE '' END AS serial_no,
+			CASE WHEN MIN(wim.idx) = wim.idx  THEN wim.arrival_time ELSE '5556767' END AS arrival_time,
+			CASE WHEN MIN(wim.idx) = wim.idx THEN wim.serial_no ELSE '555' END AS serial_no,
 			MIN(wim.idx) as idx
 		from 
 			`tabWork Order` wo,
