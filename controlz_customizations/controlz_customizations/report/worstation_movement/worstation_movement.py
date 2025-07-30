@@ -19,24 +19,39 @@ def execute(filters=None):
 
 def get_data(filters):
 	final_data = frappe.db.sql("""
-		select 
-			wo.name as workorder,
-			wo.production_item as production_item,
-			wim.workstation as workstation,
-			CASE WHEN wim.idx = MIN(wim.idx)   THEN wim.arrival_time ELSE wim.arrival_time END AS arrival_time,
-			CASE WHEN wim.idx = MIN(wim.idx)   THEN wim.serial_no ELSE wim.serial_no END AS serial_no,
-			MIN(wim.idx) as idx
-		from 
-			`tabWork Order` wo,
-			`tabWorkstation Item Movement` wim
-						
-		where 
-			wo.name = wim.parent
-		and wo.docstatus = 1
-		and wo.creation >= %(from_date)s
-		and wo.creation <= %(to_date)s
-		group by wo.name,wim.workstation
-		order by wo.creation desc
+		SELECT 
+			wo.name AS workorder,
+			wo.production_item,
+			wim1.workstation,
+			wim1.arrival_time,
+			wim1.serial_no,
+			wim1.idx
+		FROM 
+			`tabWork Order` wo
+		JOIN (
+			SELECT 
+				wim.parent,
+				wim.workstation,
+				wim.arrival_time,
+				wim.serial_no,
+				wim.idx
+			FROM `tabWorkstation Item Movement` wim
+			JOIN (
+				SELECT 
+					parent,
+					workstation,
+					MIN(idx) AS min_idx
+				FROM `tabWorkstation Item Movement`
+				GROUP BY parent, workstation
+			) AS min_wim
+			ON wim.parent = min_wim.parent AND wim.workstation = min_wim.workstation AND wim.idx = min_wim.min_idx
+		) AS wim1
+		ON wo.name = wim1.parent
+		WHERE 
+			wo.docstatus = 1
+			AND wo.creation >= %(from_date)s
+			AND wo.creation <= %(to_date)s
+		ORDER BY wo.creation DESC;
 	""", {
 		"from_date": filters.get("from_date"),
 		"to_date": filters.get("to_date")
