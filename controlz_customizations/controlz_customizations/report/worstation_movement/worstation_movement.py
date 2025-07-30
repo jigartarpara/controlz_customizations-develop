@@ -22,8 +22,8 @@ def get_data(filters):
 			wo.name as workorder,
 			wo.production_item as production_item,
 			wim.workstation as workstation,
-			wim.arrival_time as arrival_time,
-			wim.serial_no as serial_no
+			CASE WHEN MIN(wim.idx)  THEN wim.arrival_time ELSE '' END AS arrival_time,
+			CASE WHEN MIN(wim.idx)  THEN wim.serial_no ELSE '' END AS serial_no
 		from 
 			`tabWork Order` wo,
 			`tabWorkstation Item Movement` wim
