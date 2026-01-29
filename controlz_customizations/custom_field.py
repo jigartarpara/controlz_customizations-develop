@@ -47,6 +47,35 @@ def setup_custom_fields():
 				# read_only=True
 			),
 		],
+		"Customer": [
+			dict(fieldname='retailer_code',
+				label='Retailer Code',
+				fieldtype='Data',
+				insert_after='customer_group'
+			),
+			dict(fieldname='distributor_code',
+				label='Distributor Code',
+				fieldtype='Data',
+				insert_after='retailer_code'
+			)
+		],
+		"Serial No": [
+			dict(fieldname='retailer_code',
+				label='Retailer Code',
+				fieldtype='Data',
+				insert_after='company'
+			),
+			dict(fieldname='distributor_code',
+				label='Distributor Code',
+				fieldtype='Data',
+				insert_after='work_order'
+			),
+			dict(fieldname='sr_status',
+				label='SR Status',
+				fieldtype='Check',
+				insert_after='retailer_code'
+			)
+		]
 	}
 	try:
 		create_custom_fields(custom_fields)
