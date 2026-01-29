@@ -131,7 +131,7 @@ doc_events = {
 	},
     "Delivery Note": {
         "on_submit": "controlz_customizations.bin.delivery_note_on_submit_cancel",
-        "on_cancel": "controlz_customizations.bin.delivery_note_on_submit_cancel",
+        "on_cancel": "controlz_customizations.bin.delivery_note_on_submit_cancel"
 	},
     "Purchase Receipt": {
         "on_submit": "controlz_customizations.bin.purchase_receipt_on_submit_cancel",
@@ -140,8 +140,10 @@ doc_events = {
     "Sales Order": {
         "on_submit": "controlz_customizations.bin.sales_order_on_submit_cancel",
         "on_cancel": "controlz_customizations.bin.sales_order_on_submit_cancel"
-	}
-    
+	},
+    "Customer": {
+        "validate": "controlz_customizations.bin.validate"
+    }
 }
 
 # Scheduled Tasks
