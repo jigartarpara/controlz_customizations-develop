@@ -23,7 +23,7 @@ def authenticate():
     if not distributor_code_exists:
         return {"responsecode": "5", "message": "Incorrect Distributor Code"}
 
-    product = frappe.db.get_value("Serial No", serial_no, ["item_code"], as_dict=True)
+    product = frappe.db.get_value("Serial No", serial_no, ["item_code", "sr_status"], as_dict=True)
 
     if not product:
         return {"responsecode": "4", "message": "This is not a OEM Serial Number"}
