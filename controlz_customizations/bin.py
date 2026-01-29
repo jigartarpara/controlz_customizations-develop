@@ -56,14 +56,27 @@ def update_retailer_code_distributor_code_sr_status_on_serial_no(doc, method):
     customer = frappe.get_doc("Customer", doc.customer)
 
     for item in doc.items:
-        serial_and_batch_bundle = frappe.get_doc("Serial and Batch Bundle", item.serial_and_batch_bundle)
-        if serial_and_batch_bundle.entries:
-            for row in serial_and_batch_bundle.entries:
-                serial_no = frappe.get_doc("Serial No", row.serial_no)
-                if serial_no:
-                    frappe.db.set_value("Serial No", row.serial_no, "retailer_code", customer.retailer_code, update_modified=False)
-                    frappe.db.set_value("Serial No", row.serial_no, "distributor_code", customer.distributor_code, update_modified=False)
-                    frappe.db.set_value("Serial No", row.serial_no, "sr_status", True, update_modified=False)
+        if item.use_serial_batch_fields and item.serial_no:
+            serials = item.serial_no or ""
+            serial_list = [s.strip() for s in serials.split("\n") if s.strip()]
+
+            for serial_no in serial_list:
+                serial = frappe.get_doc("Serial No", serial_no)
+                if serial:
+                    frappe.db.set_value("Serial No", serial_no, "retailer_code", customer.retailer_code, update_modified=False)
+                    frappe.db.set_value("Serial No", serial_no, "distributor_code", customer.distributor_code, update_modified=False)
+                    frappe.db.set_value("Serial No", serial_no, "sr_status", True, update_modified=False)
+
+        elif item.serial_and_batch_bundle:
+            serial_and_batch_bundle = frappe.get_doc("Serial and Batch Bundle", item.serial_and_batch_bundle)
+            if serial_and_batch_bundle.entries:
+                for row in serial_and_batch_bundle.entries:
+                    serial_no = frappe.get_doc("Serial No", row.serial_no)
+
+                    if serial_no:
+                        frappe.db.set_value("Serial No", row.serial_no, "retailer_code", customer.retailer_code, update_modified=False)
+                        frappe.db.set_value("Serial No", row.serial_no, "distributor_code", customer.distributor_code, update_modified=False)
+                        frappe.db.set_value("Serial No", row.serial_no, "sr_status", True, update_modified=False)
 
 def validate(doc, method):
     if doc.customer_group == 'Dealer':
