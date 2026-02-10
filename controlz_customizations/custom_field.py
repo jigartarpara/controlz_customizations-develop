@@ -75,6 +75,13 @@ def setup_custom_fields():
 				fieldtype='Check',
 				insert_after='retailer_code'
 			)
+		],
+		"Purchase Receipt": [
+			dict(fieldname='rejected_serial_no',
+				label='Rejected Serial No',
+				fieldtype='Text',
+				insert_after='rejected_warehouse'
+			)
 		]
 	}
 	try:

@@ -4,6 +4,7 @@ from frappe.utils import flt
 import json
 import random
 import string
+from frappe.model.naming import make_autoname
 
 CODE_LENGTH = 15
 MAX_RETRIES = 20  # safety limit
@@ -20,6 +21,18 @@ def delivery_note_on_submit_cancel(doc,method):
         update_stock(row.item_code, row.warehouse)
 
 def purchase_receipt_on_submit_cancel(doc, method):
+    if doc.rejected_serial_no and method == "on_submit":
+        rejected_serial_nos = set(
+            s.strip()
+            for s in doc.rejected_serial_no.split("\n")
+            if s.strip()
+        )
+
+        for serial_no in rejected_serial_nos:
+            serial_no_doc = frappe.get_doc("Serial No", serial_no)
+            if serial_no_doc.name:
+                serial_no_doc.delete()
+
     for row in doc.items:
         update_stock(row.item_code, row.warehouse)
 
@@ -95,3 +108,45 @@ def validate(doc, method):
 def generate_code():
     """Generate a random 15-character alphanumeric code."""
     return ''.join(random.choices(string.ascii_uppercase + string.digits, k=CODE_LENGTH))
+
+@frappe.whitelist()
+def create_serial_numbers(pr_name):
+    pr = frappe.get_doc("Purchase Receipt", pr_name)
+
+    for item in pr.items:
+        if item.serial_no:
+            continue
+
+        item_details = frappe.get_cached_value(
+            "Item", item.item_code, ["has_serial_no", "serial_no_series"], as_dict=1
+        )
+
+        if not item_details.has_serial_no:
+            continue
+
+        serial_series = item_details.serial_no_series
+
+        if not serial_series:
+            frappe.throw(
+                f"Serial No Series not defined for Item {item.item_code}"
+            )
+
+        serial_nos = []
+        received_qty = int(item.received_qty)
+
+        for _ in range(received_qty):
+            serial_no = make_autoname(serial_series)
+            serial_doc = frappe.get_doc({
+                "doctype": "Serial No",
+                "serial_no": serial_no,
+                "item_code": item.item_code,
+                "company": pr.company
+            })
+    
+            serial_doc.insert(ignore_permissions=True)
+            serial_nos.append(serial_no)
+
+        item.serial_no = "\n".join(serial_nos)
+
+    pr.save(ignore_permissions=True)
+    frappe.db.commit()
