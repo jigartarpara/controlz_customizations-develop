@@ -7,11 +7,10 @@ def authenticate():
 
     retailer_code = data.get("retailer_code")
     serial_no = data.get("product_identification_number")
-    sku_code = data.get("product_sku_code")
-    # this need to search from short_code field
+    short_code = data.get("product_sku_code")
     distributor_code = data.get("Distributor_Code")
 
-    if not retailer_code or not serial_no or not sku_code or not distributor_code:
+    if not retailer_code or not serial_no or not short_code or not distributor_code:
         frappe.throw(_("Missing required parameters"))
 
     retailer_code_exists = frappe.db.exists("Customer", {"retailer_code": retailer_code})
@@ -24,15 +23,25 @@ def authenticate():
     if not distributor_code_exists:
         return {"responsecode": "5", "message": "Incorrect Distributor Code"}
 
-    product = frappe.db.get_value("Serial No", serial_no, ["item_code", "sr_status"], as_dict=True)
+    serial_no = frappe.db.get_value("Serial No", serial_no, ["item_code", "sr_status", "custom_imei1", "custom_imei2"], as_dict=True)
 
-    if not product:
+    if not serial_no:
         return {"responsecode": "4", "message": "This is not a OEM Serial Number"}
 
-    if product.item_code != sku_code:
+    product = frappe.db.get_value("Item", serial_no.item_code, ["short_code"], as_dict=True)
+
+    if not product:
         return {"responsecode": "1", "message": "Model Mismatch"}
-    # need to return custom_imei1 as imei1, custom_imei2 as imei2 from serial no
-    return {
-        "responsecode": product.sr_status or 0,
-        "message": "Success"
-    }
+
+    response = {}
+    response['responsecode'] = str(product.sr_status or 0)
+
+    if product.short_code == short_code:
+        if serial_no.custom_imei1:
+            response['imei1'] = serial_no.custom_imei1
+
+        if serial_no.custom_imei2:
+            response['imei2'] = serial_no.custom_imei2
+
+    response['message'] = 'Success'
+    return response
