@@ -19,6 +19,11 @@ def setup_custom_fields():
 				options='Warehouse',
 				insert_after='stock_uom'
 			),
+			dict(fieldname='short_code',
+				label='Short Code',
+				fieldtype='Data',
+				insert_after='stock_uom'
+			)
 		],
 		"Material Request": [
 			dict(fieldname='production_stock_planning',
