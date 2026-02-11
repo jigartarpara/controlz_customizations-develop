@@ -8,6 +8,7 @@ def authenticate():
     retailer_code = data.get("retailer_code")
     serial_no = data.get("product_identification_number")
     sku_code = data.get("product_sku_code")
+    # this need to search from short_code field
     distributor_code = data.get("Distributor_Code")
 
     if not retailer_code or not serial_no or not sku_code or not distributor_code:
@@ -30,7 +31,7 @@ def authenticate():
 
     if product.item_code != sku_code:
         return {"responsecode": "1", "message": "Model Mismatch"}
-
+    # need to return custom_imei1 as imei1, custom_imei2 as imei2 from serial no
     return {
         "responsecode": product.sr_status or 0,
         "message": "Success"
