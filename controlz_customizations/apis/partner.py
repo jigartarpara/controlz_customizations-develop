@@ -34,7 +34,7 @@ def authenticate():
         return {"responsecode": "1", "message": "Model Mismatch"}
 
     response = {}
-    response['responsecode'] = str(product.sr_status or 0)
+    response['responsecode'] = str(serial_no.sr_status or 0)
 
     if product.short_code == short_code:
         if serial_no.custom_imei1:
