@@ -43,5 +43,8 @@ def authenticate():
         if serial_no.custom_imei2:
             response['imei2'] = serial_no.custom_imei2
 
-    response['message'] = 'Success'
+        response['message'] = 'Success'
+    else:
+        response['responsecode'] = '1'
+        response['message'] = 'Model Mismatch'
     return response
